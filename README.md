@@ -1,5 +1,5 @@
-# 3dSnowStorm
-Uses PyGame to simulate a 3d Snow Storm in a window.  Can choose number of flakes, wind and depth of field
+# 3d Snow Storm
+Uses PyGame to simulate a 3d Snow Storm in a window. You can choose number of flakes, wind and depth of field on the command line.
 
 The pygame window is re-sizeable but it will take the snow a little while to catch up with the new size. 
 
