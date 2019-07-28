@@ -24,11 +24,11 @@ class SimStorm:
     
     def init_flakes(self):  
         """ Create the Storm
-            Make all of the X,Y,Z random so we can
+            Make all of the X,Y,Z and D random so we can
             create new flakes all over the screen
         """
         for i in range(self.num_flakes):
-            # The flakes are represented as a list of positions: [X,Y,Z]
+            # The flakes are represented as a list of positions: [X,Y,Z] + D for D*sin(1) drift
             self.flakes.append([randrange(self.width), randrange(self.height), randrange(1, self.max_depth),
             randrange(1,3)])
     
@@ -48,14 +48,15 @@ class SimStorm:
             # Draw each flake, if it is visible on the screen, or reset it.
             # We calculate the size and speed such that distant flakes are smaller, slower and
             # darker than closer flakes. This is done using Linear Interpolation.
+            LinIntvalue = float((1 - float(flake[Z]) / self.max_depth)) # This flakes Linear Interpolation.
             if (0 <= flake[X] <= self.width) and (0 <= flake[Y] <= self.height): # If on screen then draw the flake
                 #flake[X] += randrange(-1, 2) + self.wind  # Let the flakes drift a little in the wind 
-                drift = int(flake[D]*sin(1)) + self.wind
-                flake[X] += int((1 - float(flake[Z]) / self.max_depth) * drift)  # Let the flakes drift a little in the wind
-                speed =   int( (1 - (float(flake[Z]) / self.max_depth)) * (self.max_depth/(2)) )  # add to Y to drop the flake down
+                drift = flake[D]*sin(1) + self.wind
+                flake[X] += int(LinIntvalue * drift)  # Let the flakes drift a little in the wind
+                speed =   int(LinIntvalue * (self.max_depth/(2)))   # add to Y to drop the flake down
                 flake[Y] += self.clamp(speed, 2, int(self.max_depth/2))
-                shade = (1 - float(flake[Z]) / self.max_depth) * 255
-                size = int((1 - float(flake[Z]) / self.max_depth) * 6.5)
+                shade = LinIntvalue * 255
+                size = int(LinIntvalue * 6.5)
                 pygame.draw.circle(self.screen, (shade,shade,shade), (flake[X],flake[Y]), size)  # Draw each flake
             else:  # This flake is out of bounds. Lets make a new flake off to the side or top.
                 if flake[Y] < self.height:  # Not at the bottom yet, we must've blown off one of the sides
