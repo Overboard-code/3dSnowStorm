@@ -7,7 +7,8 @@ os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide" # suppress the Hello from Pyga
 import pygame
 from functools import partial
 from random import randrange
-X, Y, Z = 0, 1, 2        
+from math import sin
+X, Y, Z, D = 0, 1, 2, 3      
 FPS = 30
 class SimStorm:     
     def __init__(self, num_flakes, wind, max_depth, wide, high):
@@ -23,12 +24,13 @@ class SimStorm:
     
     def init_flakes(self):  
         """ Create the Storm
-			Make all of the X,Y,Z random so we can
+            Make all of the X,Y,Z random so we can
             create new flakes all over the screen
-		"""
+        """
         for i in range(self.num_flakes):
             # The flakes are represented as a list of positions: [X,Y,Z]
-            self.flakes.append([randrange(self.width), randrange(self.height), randrange(1, self.max_depth)])
+            self.flakes.append([randrange(self.width), randrange(self.height), randrange(1, self.max_depth),
+            randrange(1,3)])
     
     def new_screen(self,width,height):
         ''' New_Screen
@@ -47,9 +49,11 @@ class SimStorm:
             # We calculate the size and speed such that distant flakes are smaller, slower and
             # darker than closer flakes. This is done using Linear Interpolation.
             if (0 <= flake[X] <= self.width) and (0 <= flake[Y] <= self.height): # If on screen then draw the flake
-                flake[X] += randrange(-1, 2) + self.wind  # Let the flakes drift a little in the wind   
+                #flake[X] += randrange(-1, 2) + self.wind  # Let the flakes drift a little in the wind 
+                drift = int(flake[D]*sin(1)) + self.wind
+                flake[X] += int((1 - float(flake[Z]) / self.max_depth) * drift)  # Let the flakes drift a little in the wind
                 speed =   int( (1 - (float(flake[Z]) / self.max_depth)) * (self.max_depth/(2)) )  # add to Y to drop the flake down
-                flake[Y] += self.clamp(speed, 1, (self.max_depth))
+                flake[Y] += self.clamp(speed, 2, int(self.max_depth/2))
                 shade = (1 - float(flake[Z]) / self.max_depth) * 255
                 size = int((1 - float(flake[Z]) / self.max_depth) * 6.5)
                 pygame.draw.circle(self.screen, (shade,shade,shade), (flake[X],flake[Y]), size)  # Draw each flake
