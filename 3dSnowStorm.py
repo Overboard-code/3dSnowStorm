@@ -30,7 +30,7 @@ class SimStorm:
         for i in range(self.num_flakes):
             # The flakes are represented as a list of positions: [X,Y,Z] + D for D*sin(1) drift
             self.flakes.append([randrange(self.width), randrange(self.height), randrange(1, self.max_depth),
-            randrange(1,3)])
+            randrange(1,abs(self.wind)+4)])
     
     def new_screen(self,width,height):
         ''' New_Screen
