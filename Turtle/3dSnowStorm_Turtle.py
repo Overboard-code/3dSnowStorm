@@ -27,7 +27,7 @@ class TurtleStormSim:
         self.should_draw = True
         self.flakes = []
         self.wind = wind*(FPS/2)/FPS
-        self.colorlist = ["White","Snow","White Smoke","Ivory","Gainsboro","Light Grey","Light slate gray","Silver","Slate Gray","Dark Grey","Grey","Dim Grey","Dark Grey"]
+        self.colorlist = ["White","Snow","White Smoke","Ivory","Gainsboro","Light Grey","Light slate gray","Silver","Slate Gray","Dark Grey","Grey","Dim Grey"]
         self.speedlist = [11,10,9,8,7,6,5,4,3,3,2,2]
         self.sizelist = [7,7,6,6,5,4,4,3,3,2,2,1,1]
         self.init_flakes()
@@ -49,32 +49,26 @@ class TurtleStormSim:
     def init_flakes(self):
         """ Create the Storm """
         for i in range(self.num_flakes):
-            flake = {}
-            flake['t'] = self.init_turtle(self.colorlist[0],2)
+            flake = {}   
             flake['X'] = randrange(0 , self.width)
             flake['Y'] = randrange(0 , self.height)
             flake['Z'] = randrange(1, self.max_depth)
             flake['drift'] = randrange(1,4)
             flake['size'] = self.sizelist[ flake['Z']-1 ]
-            flake['shade'] = self.colorlist[ flake['Z']-1 ] 
+            flake['t'] = self.init_turtle(self.colorlist[ flake['Z']-1],2)
             flake['speed'] = self.speedlist[ flake['Z']-1 ]*(SPEED)/(FPS)
-            # The flakes are represented as a list of positions: [X,Y,Z] size and shade
+            # The flakes are represented as a list of positions: [X,Y,Z] size and drift
             self.flakes.append(flake)
-   
-    def clamp(self, n, smallest, largest): return max(smallest, min(n, largest))
-    
+
     def draw(self):
         if self.should_draw == False: # There is no change. Don't draw and return immediately
             return
         for flake in self.flakes:
             flake['t'].clear() # clear the current drawing
-            flake['t'].color(flake['shade'])
             flake['t'].goto(flake['X'],flake['Y'])
             flake['t'].dot(flake['size'])
         self.should_draw = False # just finished drawing, wait until next time
         
-        
-            
     def move_flakes(self):
         """ Move and draw the flakes """
         wide = turtle.window_width()
@@ -101,7 +95,7 @@ class TurtleStormSim:
                     flake['Y'] = 0
                 flake['Z'] = randrange(1, self.max_depth) # As new flakes appear on screen make the distance random
                 flake['size']  = self.sizelist[ flake['Z']-1 ]
-                flake['shade'] = self.colorlist[ flake['Z']-1 ]
+                flake['t'].color(self.colorlist[ flake['Z']-1 ] )
                 flake['speed'] = self.speedlist[ flake['Z']-1 ] *(SPEED)/FPS
         self.should_draw = True        
         self.screen.ontimer(self.move_flakes,TIMER_VALUE)
@@ -126,7 +120,7 @@ if __name__ == "__main__":
             raise argparse.ArgumentTypeError('value %s not in range %s to %s'%(test_value,min,max))
 
     pgmName =  os.path.basename(sys.argv[0])
-    descStr = """ {0} Simulates a fall of snow using the pygame module.  
+    descStr = """ {0} Simulates a fall of snow using the TkInter Turtle module.  
  When run with no arguments, this program shows the default storm.
       {0} --wind 2 --flakes 600 --depth 11
       
