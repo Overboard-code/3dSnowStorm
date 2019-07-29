@@ -6,11 +6,11 @@ import os, sys, turtle, argparse
 from functools import partial
 from random import randrange
 from math import sin
-     
-FPS = 180      # constant: refresh about xx times per second
+    
+FPS = 180 # constant: refresh about 30 times per second
 TIMER_VALUE = 1000//FPS # the timer value in milliseconds for timer events
-SPEED = 60     #  Speed throttle
-
+SPEED = 60
+             
 class TurtleStormSim:     
     def __init__(self, num_flakes, max_depth, wide, high, wind):
         self.screen = turtle.Screen()
@@ -60,7 +60,9 @@ class TurtleStormSim:
             flake['speed'] = self.speedlist[ flake['Z']-1 ]*(SPEED)/(FPS)
             # The flakes are represented as a list of positions: [X,Y,Z] size and shade
             self.flakes.append(flake)
-
+   
+    def clamp(self, n, smallest, largest): return max(smallest, min(n, largest))
+    
     def draw(self):
         if self.should_draw == False: # There is no change. Don't draw and return immediately
             return
@@ -71,6 +73,8 @@ class TurtleStormSim:
             flake['t'].dot(flake['size'])
         self.should_draw = False # just finished drawing, wait until next time
         
+        
+            
     def move_flakes(self):
         """ Move and draw the flakes """
         wide = turtle.window_width()
