@@ -2,6 +2,7 @@
  3D Snow Storm Animation
  Andy Richter June 2019
 """
+from __future__ import division, absolute_import, print_function, unicode_literals
 import os,argparse,sys
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide" # suppress the Hello from Pygame message 
 import pygame
@@ -98,13 +99,13 @@ if __name__ == "__main__":
             raise argparse.ArgumentTypeError('value %s not in range %s to %s'%(test_value,min,max))
 
     pgmName =  os.path.basename(sys.argv[0])
-    descStr = f""" {pgmName} Simulates a fall of snow using the pygame module.  
+    descStr = """ {0} simulates a fall of snow using the pygame module.  
  When run with no arguments, this program shows the default storm.
-      {pgmName} --wind 2 --flakes 600 --depth 11
+      {0} --wind 2 --flakes 600 --depth 11
       
- eg.  {pgmName} --wind -2 -f 500
-      {pgmName} -d 9 -w 4 --flakes 755
-         """
+ eg.  {0} --wind -2 -f 500
+      {0} -d 9 -w 4 --flakes 755
+         """.format(pgmName)
     parser = argparse.ArgumentParser(description=descStr,formatter_class=argparse.RawDescriptionHelpFormatter ) 
     # add expected arguments 
     parser.add_argument('-f','--flakes', nargs=1, dest='num_flakes', metavar="[1 to 800]", default=[600],   
