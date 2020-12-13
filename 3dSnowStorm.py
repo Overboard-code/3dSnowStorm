@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """
  3D Snow Storm Animation
  Andy Richter June 2019
@@ -50,7 +51,9 @@ class SimStorm:
             # We calculate the size and speed such that distant flakes are smaller, slower and
             # darker than closer flakes. This is done using Linear Interpolation.
             LinIntvalue = float((1 - float(flake[Z]) / self.max_depth)) # This flakes Linear Interpolation.
-            if (0 <= flake[X] <= self.width) and (0 <= flake[Y] <= self.height): # If on screen then draw the flake
+            flake[Z] += uniform(-0.1,0.1)
+            flake[Z] = max(min(flake[Z], self.max_depth), 1)
+            if (0 <= flake[X] <= self.width) and (0 <= flake[Y] <= self.height) and (0 <= flake[Z] <= (self.max_depth+1)): # If on screen then draw the flake
                 #flake[X] += randrange(-1, 2) + self.wind  # Let the flakes drift a little in the wind 
                 drift = flake[D]*sin(flake[A]) + self.wind
                 flake[X] += int(LinIntvalue * drift)  # Let the flakes drift a little in the wind
